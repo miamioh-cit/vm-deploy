@@ -6,7 +6,7 @@ pipeline {
         DOCKER_IMAGE = 'cithit/VmDeployment'                                   //<-----change this to your MiamiID!
         IMAGE_TAG = "build-${BUILD_NUMBER}"
         GITHUB_URL = 'https://github.com/hunterds-miamioh/Vm-Auto-Deployment-.git'     //<-----change this to match this new repository!
-        KUBECONFIG = credentials('roseaw-225')                           //<-----change this to match your kubernetes credentials (MiamiID-225)! 
+        KUBECONFIG = credentials('hunterds-cluster')                           //<-----change this to match your kubernetes credentials (MiamiID-225)! 
     }
 
     stages {
