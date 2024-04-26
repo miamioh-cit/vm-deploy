@@ -1,2 +1,8 @@
 flask
 paramiko
+import ssl
+re
+time
+ipaddress
+pyVmomi
+pyVim.connect
