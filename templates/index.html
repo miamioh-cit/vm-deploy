@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VM Configuration</title>
+    <style>
+        /* Common styles for loading animations */
+        .loader {
+            width: 90px;
+            height: 14px;
+            box-shadow: 0 3px 0 #fff;
+            position: relative;
+            clip-path: inset(-40px 0 -5px);
+            margin-top: 10px; /* Add some margin between text and animation */
+        }
+        .loader:before {
+            content: "";
+            position: absolute;
+            inset: auto calc(50% - 17px) 0;
+            height: 50px;
+            --g: no-repeat linear-gradient(#ccc 0 0);
+            background: var(--g), var(--g), var(--g), var(--g);
+            background-size: 16px 14px;
+            animation: l7-1 2s infinite linear, l7-2 2s infinite linear;
+        }
+        @keyframes l7-1 {
+            0%, 100% { background-position: 0 -50px, 100% -50px; }
+            17.5% { background-position: 0 100%, 100% -50px, 0 -50px, 100% -50px; }
+            35% { background-position: 0 100%, 100% 100%, 0 -50px, 100% -50px; }
+            52.5% { background-position: 0 100%, 100% 100%, 0 calc(100% - 16px), 100% -50px; }
+            70%, 98% { background-position: 0 100%, 100% 100%, 0 calc(100% - 16px), 100% calc(100% - 16px); }
+        }
+        @keyframes l7-2 {
+            0%, 70% { transform: translate(0); }
+            100% { transform: translate(200%); }
+        }
+    
+        /* Styles specific to the "Create VM" loading animation */
+        #createLoadingMessage {
+            display: none; /* Initially hide the loading message */
+            color: white;
+            background-color: #c4234f;
+            padding: 25px;
+            margin-top: 20px;
+            text-align: left; /* Align text to the left */
+            border-radius: 5px;
+            position: relative; /* Make the position relative to allow positioning of the text */
+            width: fit-content; /* Adjust width to fit content */
+        }
+    
+        /* Adjust margin to move text down */
+        #createLoadingMessage #loadingText {
+            margin-top: 45px; /* Adjust the margin-top to move the text down 1 line */
+        }
+        /* Styles specific to the "Search VMs" loading animation */
+        #searchLoadingMessage {
+            display: none; /* Initially hide the loading message */
+            color: white;
+            background-color: #bbbbbb;
+            padding: 20px;
+            margin-top: 5px;
+            text-align: left; /* Align text to the left */
+            border-radius: 5px;
+            position: relative; /* Make the position relative to allow positioning of the text */
+            width: fit-content; /* Adjust width to fit content */
+        }
+        .search-loader {
+            width: fit-content;
+            font-size: 17px;
+            font-family: monospace;
+            line-height: 1.4;
+            font-weight: bold;
+            --c: no-repeat linear-gradient(#000 0 0); 
+            background: var(--c),var(--c),var(--c),var(--c),var(--c),var(--c),var(--c);
+            background-size: calc(1ch + 1px) 100%;
+            border-bottom: 10px solid #0000; 
+            position: relative;
+            animation: l8-0 3s infinite linear;
+            clip-path: inset(-20px 0);
+        }
+        .search-loader::before {
+            content:"Loading";
+        }
+        .search-loader::after {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 14px;
+            background: #f80404;
+            left: -10px;
+            bottom: 100%;
+            animation: l8-1 3s infinite linear;
+        }
+        @keyframes l8-0{
+            0%,
+            12.5% {background-position: calc(0*100%/6) 0   ,calc(1*100%/6)    0,calc(2*100%/6)    0,calc(3*100%/6)    0,calc(4*100%/6)    0,calc(5*100%/6)    0,calc(6*100%/6) 0}
+            25%   {background-position: calc(0*100%/6) 40px,calc(1*100%/6)    0,calc(2*100%/6)    0,calc(3*100%/6)    0,calc(4*100%/6)    0,calc(5*100%/6)    0,calc(6*100%/6) 0}
+            37.5% {background-position: calc(0*100%/6) 40px,calc(1*100%/6) 40px,calc(2*100%/6)    0,calc(3*100%/6)    0,calc(4*100%/6)    0,calc(5*100%/6)    0,calc(6*100%/6) 0}
+            50%   {background-position: calc(0*100%/6) 40px,calc(1*100%/6) 40px,calc(2*100%/6) 40px,calc(3*100%/6)    0,calc(4*100%/6)    0,calc(5*100%/6)    0,calc(6*100%/6) 0}
+            62.5% {background-position: calc(0*100%/6) 40px,calc(1*100%/6) 40px,calc(2*100%/6) 40px,calc(3*100%/6) 40px,calc(4*100%/6)    0,calc(5*100%/6)    0,calc(6*100%/6) 0}
+            75%   {background-position: calc(0*100%/6) 40px,calc(1*100%/6) 40px,calc(2*100%/6) 40px,calc(3*100%/6) 40px,calc(4*100%/6) 40px,calc(5*100%/6)    0,calc(6*100%/6) 0}
+        }
+        @keyframes l8-1{
+            100% {left:115%}
+        }
+    
+        /* Red theme for the entire page */
+        body {
+            background-color: #ebeae0; /* Light gray background */
+            color: #c4234f; /* Red text color */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+            max-width: 1024px; /* Max width for content */
+            margin: 0 auto; /* Center content horizontally */
+        }
+    
+        /* Style for input fields */
+        input[type="text"],
+        input[type="password"],
+        select {
+            padding: 10px;
+            border: 1px solid #ff0000; /* Red border */
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: 300px; /* Adjusted width for input fields */
+        }
+    
+        /* Style for submit buttons */
+        input[type="submit"] {
+            background-color: #c4234f; /* Red background */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+    
+        input[type="submit"]:hover {
+            background-color: #c4234f; /* Darker red on hover */
+        }
+
+        /* Red banner style */
+        #redBanner {
+            background-color: #c3142d;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* White line style */
+        #whiteLine {
+            height: 1px;
+            background-color: white;
+        }
+
+        /* Box containing form and banner */
+        #contentBox {
+            background-color: white;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: calc(8.5in - 40px); /* Standard letter size width */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: add a subtle shadow */
+        }
+
+        /* Background color for wider screens */
+        @media screen and (min-width: calc(8.5in + 40px)) {
+            body {
+                background-color: #ebeae0;
+            }
+        }
+    </style>    
+</head>
+<body>
+    <!-- Box containing form and banner -->
+    <div id="contentBox">
+        <!-- Red banner with Miami University logo -->
+        <div id="redBanner">
+            <img src="{{ url_for('static', filename='MiamiUniversityLogo.png') }}" alt="Miami University Logo" style="max-width: 50%;">
+        </div>
+        <div id="whiteLine"></div>
+
+        {% if error_message %}
+        <div style="color: red;">{{ error_message }}</div>
+        {% endif %}
+        
+        <!-- VM Creation Form -->
+        <div>
+            <h2>Create VM</h2>
+            <form method="post" id="vmCreationForm">
+                <label for="vcenter_user">vCenter User:</label><br>
+                <input type="text" id="vcenter_user" name="vcenter_user" placeholder="Enter your vCenter Email"><br>
+
+                <label for="vcenter_password">vCenter Password:</label><br>
+                <input type="password" id="vcenter_password" name="vcenter_password" placeholder="Enter your vCenter Password"> <br>
+
+                <label for="class_option">Class Option:</label><br>
+                <select id="class_option" name="class_option">
+                    <option value="CIT281">CIT281</option>
+                    <option value="CIT284">CIT284</option>
+                    <option value="CIT358">CIT358</option>
+                    <option value="CIT386">CIT386</option>
+                    <option value="CIT480">CIT480</option>
+                    <option value="Windows Capstone">Windows Capstone</option>
+                    <option value="Linux Capstone">Linux Capstone</option>
+                </select><br>
+
+                <input type="submit" value="Create VM" id="createVmBtn">
+            </form>
+        </div>
+
+        <!-- VM Search Form -->
+        <div>
+            <h2>Search VMs</h2>
+            <form method="post" action="/search_vms" id="vmSearchForm">
+                <label for="vcenter_user_search">vCenter User:</label><br>
+                <input type="text" id="vcenter_user_search" name="vcenter_user" placeholder="Enter your vCenter Email"><br>
+
+                <label for="vcenter_password_search">vCenter Password:</label><br>
+                <input type="password" id="vcenter_password_search" name="vcenter_password" placeholder="Enter your vCenter Password"><br>
+                <input type="submit" value="Search VMs" id="searchVmBtn">
+            </form>
+        </div>
+
+        <!-- Loading message and animation for Create VM action -->
+        <div id="createLoadingMessage">
+            <div class="loader"></div>
+            <span id="loadingText"><br><b>Building your VM. <br> This can take up to 5 minutes.</b></span>
+        </div>
+
+        <!-- Loading message and animation for Search VMs action -->
+        <div id="searchLoadingMessage">
+            <div class="search-loader"></div>
+        </div>
+    </div>
+
+    <script>
+        function disableButtonsAndShowMessage(event) {
+            // Show loading message and disable buttons
+            var isVmCreation = event.target.id === 'vmCreationForm';
+            var loadingMessageId = isVmCreation ? 'createLoadingMessage' : 'searchLoadingMessage';
+            document.getElementById(loadingMessageId).style.display = 'block';
+            document.getElementById('createVmBtn').disabled = true;
+            document.getElementById('searchVmBtn').disabled = true;
+            document.getElementById('createVmBtn').value = 'Please wait...';
+            document.getElementById('searchVmBtn').value = 'Please wait...';
+        }
+
+        document.getElementById('vmCreationForm').onsubmit = function(event) {
+            disableButtonsAndShowMessage(event);
+            // Optionally, you can submit the form here
+            // this.submit();
+        };
+        document.getElementById('vmSearchForm').onsubmit = function(event) {
+            disableButtonsAndShowMessage(event);
+            // Optionally, you can submit the form here
+            // this.submit();
+        };
+    </script>
+</body>
+</html>

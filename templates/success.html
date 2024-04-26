@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VM Creation Status</title>
+    <style>
+        /* Red theme for the entire page */
+        body {
+            background-color: #ebeae0; /* Light gray background */
+            color: #c4234f; /* Red text color */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+            max-width: 1024px; /* Max width for content */
+            margin: 0 auto; /* Center content horizontally */
+            padding: 20px; /* Add padding for content */
+        }
+
+        /* Style for white box */
+        .white-box {
+            background-color: #ffffff; /* White background */
+            padding: 20px; /* Add padding for content within the box */
+            border-radius: 5px; /* Add rounded corners */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow */
+        }
+
+        /* Style for black text */
+        .black-text {
+            color: #000000; /* Black text color */
+        }
+    </style>
+</head>
+<body>
+    <!-- Centered white box for content -->
+    <div class="white-box">
+        <h1>VM Creation Status</h1>
+        <!-- Render the message with HTML formatting using the safe filter -->
+        <div style="white-space: pre-line;">{{ message|safe }}</div>
+        <a href="/">Create another VM</a>
+    </div>
+</body>
+</html>

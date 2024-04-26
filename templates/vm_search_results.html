@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VM Search Results</title>
+    <style>
+        /* Red theme for the entire page */
+        body {
+            background-color: #ebeae0; /* Light gray background */
+            color: #c4234f; /* Red text color */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+            max-width: 1024px; /* Max width for content */
+            margin: 0 auto; /* Center content horizontally */
+            padding: 20px; /* Add padding for content */
+        }
+
+        /* Style for white box */
+        .white-box {
+            background-color: #ffffff; /* White background */
+            padding: 20px; /* Add padding for content within the box */
+            border-radius: 5px; /* Add rounded corners */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow */
+        }
+
+        /* Style for flash messages */
+        .flash-messages {
+            background-color: #f8d7da;
+            color: #000000;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* CSS for the Power On loading animation, used universally */
+        .loader, .power-on-loader, .refresh-loader {
+            width: 50px;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: 
+                radial-gradient(farthest-side, #f03355 95%, #0000) 50% 1px/12px 12px no-repeat,
+                radial-gradient(farthest-side, #0000 calc(100% - 14px), #ccc 0);
+            animation: rotateAnimation 2s infinite linear;
+        }
+
+        @keyframes rotateAnimation {
+            to {
+                transform: rotate(1turn);
+            }
+        }
+
+        /* Additional CSS for positioning */
+        .loading-message {
+            display: inline-block;
+            margin-left: 10px; /* Adjust as needed */
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Flash messages display -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Centered white box for content -->
+    <div class="white-box">
+        <h1>Search Results</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>VM Name</th>
+                    <th>IP Address</th>
+                    <th>Reset Action</th>
+                    <th>Power On</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vm_name, ip_address, power_state in vms_info %}
+                <tr>
+                    <td>{{ vm_name }}</td>
+                    <td>{{ ip_address }}</td>
+                    <td>
+                        <form action="/reset_vm" method="post" class="reset-form">
+                            <input type="hidden" name="vm_name" value="{{ vm_name }}">
+                            <button type="submit" class="reset-btn">Reset</button>
+                        </form>
+                    </td>
+                    <td>
+                        {% if power_state == 'Off' %}
+                        <form action="/power_on_vm" method="post" class="power-on-form">
+                            <input type="hidden" name="vm_name" value="{{ vm_name }}">
+                            <button type="submit" class="power-on-btn">Power On</button>
+                        </form>
+                        {% else %}
+                        Powered On
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <form action="/search_vms" method="get" style="margin-top: 20px;">
+            <button type="submit" class="refresh-table-btn">Refresh Table</button>
+        </form>
+        <a href="/">Go Back</a>
+    </div>
+
+    <!-- Universal loading message and animation -->
+    <div class="loading-message">
+        <p id="reset-loading-text" style="display: none;">This can take up to 5 minutes. <br> Resetting your VM...</p>
+        <p id="power-on-loading-text" style="display: none;">Powering on your VM. This can take up to 5 minutes.</p>
+        <p id="refresh-loading-text" style="display: none;">Refreshing table, please wait...</p>
+        <div class="loader" id="universal-loader" style="display: none;"></div>
+    </div>
+
+    <script>
+        // Function to show loading message and animation for any action
+        function showLoading(action) {
+            document.getElementById(`${action}-loading-text`).style.display = 'block';
+            document.getElementById('universal-loader').style.display = 'block';
+            // Disable all other buttons including the Refresh Table button
+            document.querySelectorAll('.reset-btn, .power-on-btn, .refresh-table-btn').forEach(item => {
+                item.disabled = true;
+            });
+    
+            if (action === 'refresh') {
+                // Simulate a refresh operation with a delay before reloading the page
+                setTimeout(() => {
+                    location.reload(); // Reload the page to refresh the data
+                }, 2000); // Adjust the delay as needed
+            }
+        }
+    
+        // Function to hide loading message and animation for any action
+        function hideLoading(action) {
+            document.getElementById(`${action}-loading-text`).style.display = 'none';
+            document.getElementById('universal-loader').style.display = 'none';
+            // Call adjustButtonStates to re-enable buttons appropriately
+            adjustButtonStates();
+        }
+    
+        // Adjust button states based on Power On button availability for each machine
+        function adjustButtonStates() {
+            document.querySelectorAll('tr').forEach(row => {
+                const powerOnBtn = row.querySelector('.power-on-btn');
+                const resetBtn = row.querySelector('.reset-btn');
+                if (powerOnBtn) {
+                    // If a Power On button is present in the row, disable the Reset button for the same machine
+                    if (resetBtn) resetBtn.disabled = true;
+                } else {
+                    // Enable the Reset button if no Power On button is present in the same row
+                    if (resetBtn) resetBtn.disabled = false;
+                }
+            });
+            // Re-enable the Refresh Table button
+            document.querySelectorAll('.refresh-table-btn').forEach(item => {
+                item.disabled = false;
+            });
+        }
+    
+        // Add event listeners for buttons to show loading animations
+        document.querySelectorAll('.reset-form').forEach(item => {
+            item.addEventListener('submit', () => showLoading('reset'));
+        });
+    
+        document.querySelectorAll('.power-on-form').forEach(item => {
+            item.addEventListener('submit', () => showLoading('power-on'));
+        });
+    
+        document.querySelector('.refresh-table-btn').addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent the default form submission
+            showLoading('refresh');
+        });
+    
+        // Call adjustButtonStates on page load to set the initial state of buttons
+        document.addEventListener('DOMContentLoaded', adjustButtonStates);
+    </script>
+    
+    
+</body>
+</html>
