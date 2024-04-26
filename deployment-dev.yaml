@@ -46,7 +46,7 @@ spec:
     spec:
       containers:
         - name: flask
-          image: cithit/VMDeployment   #<------change this!!!!!
+          image: cithit/vm-deploy   #<------change this!!!!!
           ports:
             - containerPort: 5000
           volumeMounts:
