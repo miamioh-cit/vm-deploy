@@ -303,6 +303,6 @@ def main(vcenter_ip, vcenter_user, vcenter_password, class_option, datacenter_na
     Disconnect(si)
     return ip_address  # Return the IP address or None if the operation was unsuccessful
 
-if _name_ == “_main_“:
+if __name__ == "__main__":
     port = int(os.environ.get(“PORT”, 5000))
     app.run(debug=True, host=‘0.0.0.0’, port=port)
