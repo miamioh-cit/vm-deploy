@@ -66,7 +66,7 @@ spec:
   loadBalancerIP: 10.48.10.111              #<------change this!!!!                       
   ports:
   - protocol: TCP
-    port: 80
+    port: 5000
     targetPort: 5000
   selector:
     app: flask
@@ -87,4 +87,4 @@ spec:
           service:
             name: flask-service
             port:
-              number: 80
+              number: 5000
