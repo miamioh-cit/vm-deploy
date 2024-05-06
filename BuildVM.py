@@ -2,7 +2,6 @@ import ssl
 import re
 import time
 import ipaddress
-import paramiko
 from pyVmomi import vim, vmodl
 from pyVim.connect import SmartConnect, Disconnect
 from flask import flash
