@@ -70,3 +70,21 @@ spec:
     targetPort: 5000
   selector:
     app: flask
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx
+spec:
+  rules: 
+  - host: 
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend: 
+          service:
+            name: flask-service
+            port:
+              number: 80
