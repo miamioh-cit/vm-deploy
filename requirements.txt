@@ -1,5 +1,4 @@
 flask
-paramiko
 ssl
 re
 time
