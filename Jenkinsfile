@@ -5,8 +5,8 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'roseaw-dockerhub'  
         DOCKER_IMAGE = 'cithit/vm-deploy'                                   
         IMAGE_TAG = "build-${BUILD_NUMBER}"
-        GITHUB_URL = 'https://github.com/hunterds-miamioh/vm-deploy.git'     
-        KUBECONFIG = credentials('hunterds-cluster')                           //<-----change this to match your kubernetes credentials (MiamiID-225)! 
+        GITHUB_URL = 'https://github.com/miamioh-cit/vm-deploy.git'     
+        KUBECONFIG = credentials('roseaw-225')                
     }
 
     stages {
