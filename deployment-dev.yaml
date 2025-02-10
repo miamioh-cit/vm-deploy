@@ -63,7 +63,7 @@ metadata:
   name: vm-service
 spec:
   type: LoadBalancer 
-  loadBalancerIP: 10.48.10.122  #change this to match the load balancer ip for Wes                                   
+  loadBalancerIP: 10.43.90.160 #change this to match the load balancer ip                                  
   ports:
   - protocol: TCP
     port: 5000
