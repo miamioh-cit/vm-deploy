@@ -60,7 +60,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: flask-service
+  name: vm-service
 spec:
   type: LoadBalancer 
   loadBalancerIP: 10.48.10.122              #<------change this!!!!                       
