@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: flask-pv
+  name: vm-pv
   labels:
     type: nfs
 spec:
@@ -10,14 +10,14 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    path:  /srv/nfs/hunterds         #local reference change this!!!!
+    path:  /srv/nfs/roseaw
     server: 10.48.10.140
   persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: flask-pvc    
+  name: vm-pvc    
 spec:
   accessModes:
     - ReadWriteMany
@@ -31,21 +31,21 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-deployment
+  name: vm-deployment
   labels:
-    app: flask
+    app: vm
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: flask
+      app: vm
   template:
     metadata:
       labels:
-        app: flask
+        app: vm
     spec:
       containers:
-        - name: flask
+        - name: vm
           image: cithit/vm-deploy:latest  
           ports:
             - containerPort: 5000
@@ -85,6 +85,6 @@ spec:
         pathType: ImplementationSpecific
         backend: 
           service:
-            name: flask-service
+            name: vm-service
             port:
               number: 5000
