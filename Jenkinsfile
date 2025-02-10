@@ -3,9 +3,9 @@ pipeline {
 
     environment {
         DOCKER_CREDENTIALS_ID = 'roseaw-dockerhub'  
-        DOCKER_IMAGE = 'cithit/vm-deploy'                                   //<-----change this to your MiamiID!
+        DOCKER_IMAGE = 'cithit/vm-deploy'                                   
         IMAGE_TAG = "build-${BUILD_NUMBER}"
-        GITHUB_URL = 'https://github.com/hunterds-miamioh/vm-deploy.git'     //<-----change this to match this new repository!
+        GITHUB_URL = 'https://github.com/hunterds-miamioh/vm-deploy.git'     
         KUBECONFIG = credentials('hunterds-cluster')                           //<-----change this to match your kubernetes credentials (MiamiID-225)! 
     }
 
