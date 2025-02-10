@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: vm-pv
+  name: vmd-pv
   labels:
     type: nfs
 spec:
@@ -10,14 +10,14 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    path:  /srv/nfs/roseaw
+    path:  /srv/nfs/taylorw8
     server: 10.48.10.140
   persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: vm-pvc    
+  name: vmd-pvc    
 spec:
   accessModes:
     - ReadWriteMany
@@ -33,19 +33,19 @@ kind: Deployment
 metadata:
   name: vm-deployment
   labels:
-    app: vm
+    app: vmd
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: vm
+      app: vmd
   template:
     metadata:
       labels:
-        app: vm
+        app: vmd
     spec:
       containers:
-        - name: vm
+        - name: vmd
           image: cithit/vm-deploy:latest  
           ports:
             - containerPort: 5000
@@ -55,7 +55,7 @@ spec:
       volumes:
         - name: nfs-storage
           persistentVolumeClaim:
-            claimName: flask-pvc    
+            claimName: vmd-pvc    
 ---
 apiVersion: v1
 kind: Service
@@ -63,7 +63,7 @@ metadata:
   name: vm-service
 spec:
   type: LoadBalancer 
-  loadBalancerIP: 10.48.10.122              #<------change this!!!!                       
+  loadBalancerIP: 10.48.10.122  #change this to match the load balancer ip for Wes                                   
   ports:
   - protocol: TCP
     port: 5000
@@ -85,6 +85,6 @@ spec:
         pathType: ImplementationSpecific
         backend: 
           service:
-            name: vm-service
+            name: vmd-service
             port:
               number: 5000
